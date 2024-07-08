@@ -4,37 +4,42 @@ import { getReceiverSocketId, io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
 	try {
-		const { message } = req.body;
-		const { id: receiverId } = req.params;
-		const senderId = req.user._id;
+		const { message }        = req.body;
+		const { id: receiverId } = req.params;    //* extract id and rename as receiver
+		const senderId           = req.user._id;  //* req.user._id middleware "protectedRoute"
 
+		//! conversation is a perticular document of the collection Conversation 
 		let conversation = await Conversation.findOne({
-			participants: { $all: [senderId, receiverId] },
+			participants: { $all: [senderId, receiverId] }, // all the "id" in the array (i.e. sender and reciver) should be in participants
 		});
 
+		//* if no conversation existed between the users then create one, then send the message
 		if (!conversation) {
 			conversation = await Conversation.create({
 				participants: [senderId, receiverId],
 			});
 		}
 
+		//* instance of message created using Model (not saved in the DB now)
 		const newMessage = new Message({
 			senderId,
 			receiverId,
 			message,
 		});
 
+		//* after creating the message for the conversation
+		//* push the message document in conversation document
 		if (newMessage) {
-			conversation.messages.push(newMessage._id);
+			conversation.messages.push(newMessage._id); //! this is async 
 		}
 
 		// await conversation.save();
-		// await newMessage.save();
+		// await   newMessage.save();
 
 		// this will run in parallel
 		await Promise.all([conversation.save(), newMessage.save()]);
 
-		// SOCKET IO FUNCTIONALITY WILL GO HERE
+		//* SOCKET IO FUNCTIONALITY WILL GO HERE
 		const receiverSocketId = getReceiverSocketId(receiverId);
 		if (receiverSocketId) {
 			// io.to(<socket_id>).emit() used to send events to specific client
@@ -42,7 +47,8 @@ export const sendMessage = async (req, res) => {
 		}
 
 		res.status(201).json(newMessage);
-	} catch (error) {
+	} 
+	catch (error) {
 		console.log("Error in sendMessage controller: ", error.message);
 		res.status(500).json({ error: "Internal server error" });
 	}
