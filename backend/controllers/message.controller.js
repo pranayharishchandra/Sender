@@ -2,11 +2,17 @@ import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
 
+
+
+//? Error in sendMessage controller:  Message validation failed: message: Path `message` is required.
+
 export const sendMessage = async (req, res) => {
 	try {
 		const { message }        = req.body;
 		const { id: receiverId } = req.params;    //* extract id and rename as receiver
-		const senderId           = req.user._id;  //* req.user._id middleware "protectedRoute"
+		const senderId           = req.user._id;  //* (cookie) req.user._id middleware "protectedRoute"
+
+		// console.log("senderId : ", senderId)
 
 		//! conversation is a perticular document of the collection Conversation 
 		let conversation = await Conversation.findOne({
@@ -27,17 +33,36 @@ export const sendMessage = async (req, res) => {
 			message,
 		});
 
-		//* after creating the message for the conversation
-		//* push the message document in conversation document
-		if (newMessage) {
-			conversation.messages.push(newMessage._id); //! this is async 
+		//! SHOULD ADD CONDITION IF MESSAGE EXISTED
+		if (!newMessage) {
+			return res.status(400).json({ error: "Message content is required." });
 		}
 
-		// await conversation.save();
-		// await   newMessage.save();
+		//* after creating the message for the conversation
+		//* push the message document in conversation document
+		//! messages is an array refering to the messages
+		if (newMessage) {
+/* 
+* 1. Reference Storage:
+ The conversation.messages array does not store the entire newMessage object. Instead, it stores only the _id of the newMessage. 
+ - This is a common practice in MongoDB to 
+ *avoid duplication of data and to keep the document sizes small. 
+ The actual message data is stored in the Message collection.
+
+* 2. No await Needed:
+ The push operation on an array in JavaScript is synchronous and does not return a Promise.
+
+*/
+			conversation.messages.push(newMessage._id); //! don't store message but reference to 
+		}
+
+		// console.log("newMessage: ", newMessage)
+
+		await conversation.save();
+		await   newMessage.save();
 
 		// this will run in parallel
-		await Promise.all([conversation.save(), newMessage.save()]);
+		// await Promise.all([conversation.save(), newMessage.save()]);
 
 		//* SOCKET IO FUNCTIONALITY WILL GO HERE
 		const receiverSocketId = getReceiverSocketId(receiverId);
@@ -56,20 +81,54 @@ export const sendMessage = async (req, res) => {
 
 export const getMessages = async (req, res) => {
 	try {
-		const { id: userToChatId } = req.params;
-		const senderId = req.user._id;
+		const { id: userToChatId } = req.params;   //* 2nd person in the conversation / reciever
+		const senderId             = req.user._id; //* current userId (cookie)
 
 		const conversation = await Conversation.findOne({
 			participants: { $all: [senderId, userToChatId] },
-		}).populate("messages"); // NOT REFERENCE BUT ACTUAL MESSAGES
+		}).populate("messages"); //? NOT REFERENCE BUT ACTUAL MESSAGES
 
+		//! if there was no conversation between the current (cookie) user and the other 2nd user, return "empty array[]", means no messages
 		if (!conversation) return res.status(200).json([]);
 
 		const messages = conversation.messages;
 
 		res.status(200).json(messages);
-	} catch (error) {
+	} 
+	catch (error) {
 		console.log("Error in getMessages controller: ", error.message);
 		res.status(500).json({ error: "Internal server error" });
 	}
 };
+
+/*
+* getMessages
+
+* const conversation = await Conversation.findOne({
+  	participants: { $all: [senderId, userToChatId] },
+* }).populate("messages");
+
+* const messages = conversation.messages;
+
+! console.log(messages) // array of messages (objects)
+[
+    {
+        "_id"       : "668c12c5816d890749a7804f",
+        "senderId"  : "668a8ae5860678f7c3265cd4",
+        "receiverId": "668a9d949f009f7cbb266de5",
+        "message"   : "hello Anand ji by Pranay",
+        "createdAt" : "2024-07-08T16:24:38.120Z",
+        "updatedAt" : "2024-07-08T16:24:38.120Z",
+        "__v"       : 0
+    },
+    {
+        "_id"       : "668c16a78e7e6b07602ddde7",
+        "senderId"  : "668a8ae5860678f7c3265cd4",
+        "receiverId": "668a9d949f009f7cbb266de5",
+        "message"   : "message2: hello Anand ji by Pranay",
+        "createdAt" : "2024-07-08T16:41:11.954Z",
+        "updatedAt" : "2024-07-08T16:41:11.954Z",
+        "__v": 0
+    }
+]
+ */

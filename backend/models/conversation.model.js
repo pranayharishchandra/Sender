@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+// TODO: make a group like you make of people 
+
 const conversationSchema = new mongoose.Schema(
 	{
 		//* array []: group of participants - (sender & reciver) - (participant1 and participant2)
