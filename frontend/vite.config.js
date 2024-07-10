@@ -7,7 +7,7 @@ export default defineConfig({
 	server: {
 		port: 3000,
 		proxy: {
-			"/api": {
+			"/api": { // if proxy after url, it will prefix it to localhost:5001
 				target: "http://localhost:5001",
 			},
 		},
