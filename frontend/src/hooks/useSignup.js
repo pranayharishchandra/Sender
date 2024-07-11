@@ -11,8 +11,10 @@ const useSignup = () => {
 	const signup = async ({ fullName, username, password, confirmPassword, gender }) => {
 
 		const success = handleInputErrors({ fullName, username, password, confirmPassword, gender });
+
 		if (!success) return;
 
+		//* loading become "true" now because now the backend operations will be performed (which will take time)
 		setLoading(true);
 
 		try {
@@ -42,6 +44,7 @@ const useSignup = () => {
 				body   : JSON.stringify({ fullName, username, password, confirmPassword, gender }),
 			});
 
+			//* raw json data was fetched.. change it into javascript object
 			const data = await res.json();
 
 			if (data.error) {
@@ -49,7 +52,7 @@ const useSignup = () => {
 			}
 
 			localStorage.setItem("chat-user", JSON.stringify(data));
-			
+
 			setAuthUser(data);
 		} 
 		catch (error) {

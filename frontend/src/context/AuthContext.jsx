@@ -13,7 +13,7 @@ export const AuthContextProvider = ({ children }) => {
 	//* local storage for the frontend
 	const [authUser, setAuthUser] = useState(JSON.parse(localStorage.getItem("chat-user")) || null);
 
-	return <AuthContext.Provider value={{ authUser, setAuthUser }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ authUser, setAuthUser }}>	 {children}	 </AuthContext.Provider>;
 };
 
 /*

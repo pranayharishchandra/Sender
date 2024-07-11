@@ -1,17 +1,21 @@
 import useGetConversations from "../../hooks/useGetConversations";
-import { getRandomEmoji } from "../../utils/emojis";
-import Conversation from "./Conversation";
+import { getRandomEmoji }  from "../../utils/emojis";
+import Conversation        from "./Conversation";
 
 const Conversations = () => {
-	const { loading, conversations } = useGetConversations();
+
+	//! conversations = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+	const { loading, conversations } = useGetConversations(); //* all the conversations (users other than current user)
+
 	return (
 		<div className='py-2 flex flex-col overflow-auto'>
-			{conversations.map((conversation, idx) => (
+
+			{conversations.map( (conversation, idx) => (
 				<Conversation
-					key={conversation._id}
-					conversation={conversation}
-					emoji={getRandomEmoji()}
-					lastIdx={idx === conversations.length - 1}
+					key          = {conversation._id} //* conversation._id: basically referecne to that converstion, (as using it you can access whole conversation)
+					conversation = {conversation}
+					emoji        = {getRandomEmoji()}
+					lastIdx      = {idx === conversations.length - 1}
 				/>
 			))}
 

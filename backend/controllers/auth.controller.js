@@ -104,3 +104,8 @@ export const logout = (req, res) => {
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 };
+
+/*
+? - throwing erorr is only done in frontend, (as it's used by toast)
+? - in backend "res.status(500).json({ error: "error message" });"
+ */

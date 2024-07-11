@@ -80,7 +80,8 @@ const SignUp = () => {
 						<input
 							type='password'
 							placeholder='Confirm Password'
-							className='w-full input input-bordered h-10'
+							className='w-full input input-bordered h-10' 
+							//! input box size =  width of outer box - it's padding
 							value={inputs.confirmPassword}
 							onChange={(e) => setInputs({ ...inputs, confirmPassword: e.target.value })}
 						/>
@@ -96,13 +97,15 @@ const SignUp = () => {
 						Already have an account?
 					</Link>
 
+
 					<div>
+						{/* ! the signup button, the text "Sign Up" will be replaced by "LOADER-spinnner" and the button will get "disabled" */}
 						<button className='btn btn-block btn-sm mt-2 border border-slate-700' disabled={loading}>
 							{loading ? <span className='loading loading-spinner'></span> : "Sign Up"}
 						</button>
 					</div>
 				</form>
-				
+
 			</div>
 		</div>
 	);
