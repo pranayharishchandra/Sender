@@ -57,3 +57,14 @@ body {
 		transform: translate3d(4px, 0, 0);
 	}
 }
+
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .container > * {
+    min-width: 100%; /* Ensure full width on smaller screens */
+  }
+}

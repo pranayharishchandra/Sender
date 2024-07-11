@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import useConversation from "../../zustand/useConversation";
-import MessageInput from "./MessageInput";
-import Messages from "./Messages";
-import { TiMessages } from "react-icons/ti";
+import { useEffect }      from "react";
+import useConversation    from "../../zustand/useConversation";
+import MessageInput	 	    from "./MessageInput";
+import Messages 			    from "./Messages";
+import { TiMessages }     from "react-icons/ti";
 import { useAuthContext } from "../../context/AuthContext";
 
 const MessageContainer = () => {
@@ -14,13 +14,16 @@ const MessageContainer = () => {
 	}, [setSelectedConversation]);
 
 	return (
-		<div className='md:min-w-[450px] flex flex-col'>
+		// <div className='md:min-w-[450px] flex flex-col'>
+		<div className='md:min-w-[600px] flex flex-col'>
+
+			{/* if no conversation selected then diplay hello welcome, when they click the conversaion then dispaly the conversation, by updating the state in the hook */}
 			{!selectedConversation ? (
 				<NoChatSelected />
 			) : (
 				<>
 					{/* Header */}
-					<div className='bg-slate-500 px-4 py-2 mb-2'>
+					<div className='bg-blue-500 px-4 py-2 mb-2'>
 						<span className='label-text'>To:</span>{" "}
 						<span className='text-gray-900 font-bold'>{selectedConversation.fullName}</span>
 					</div>

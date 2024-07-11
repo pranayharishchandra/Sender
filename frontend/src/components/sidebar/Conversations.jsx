@@ -8,7 +8,7 @@ const Conversations = () => {
 	const { loading, conversations } = useGetConversations(); //* all the conversations (users other than current user)
 
 	return (
-		<div className='py-2 flex flex-col overflow-auto'>
+		<div className='py-2 flex flex-col overflow-auto md:min-w-[15vw]'>
 
 			{conversations.map( (conversation, idx) => (
 				<Conversation
