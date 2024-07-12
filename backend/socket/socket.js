@@ -1,7 +1,10 @@
 /* //* Overall Functionality
 
 - This setup allows for real-time communication between the server and connected clients.
-- It can handle events like notifying when users connect or disconnect, and maintaining a list of online users.
+- It can handle events like sending and receiving messages, //* io.to(receiverSocketId).emit("newMessage", newMessage);
+
+								notifying when users connect or disconnect, 
+								    and maintaining a list of online users.
 */
 
 import { Server } from "socket.io";
@@ -59,6 +62,10 @@ const userSocketMap = {}; // {userId: socketId}
 If the user ID is valid (not "undefined"), it is added to the userSocketMap.
 - An event getOnlineUsers is emitted to all connected clients, sending them the list of currently online user IDs.
  */
+
+/* //*io.on("connection", callback): 
+This method is used to register a callback function that will be executed whenever a new client connects to the server. The connection event is a predefined event in Socket.IO, and the server automatically listens for it. */
+
 io.on("connection", (socket) => {
 
 	console.log("a user connected", socket.id);

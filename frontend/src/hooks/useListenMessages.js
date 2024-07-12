@@ -10,6 +10,7 @@ const useListenMessages = () => {
 	const { messages, setMessages } = useConversation();
 
 	useEffect(() => {
+		//! sockect.on don't do directly
 		socket?.on("newMessage", (newMessage) => {
 			newMessage.shouldShake = true;
 			const sound = new Audio(notificationSound);
