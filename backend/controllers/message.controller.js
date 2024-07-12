@@ -1,5 +1,5 @@
 import Conversation from "../models/conversation.model.js";
-import Message from "../models/message.model.js";
+import Message      from "../models/message.model.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
 
 
@@ -66,6 +66,7 @@ export const sendMessage = async (req, res) => {
 
 		//* SOCKET IO FUNCTIONALITY WILL GO HERE
 		const receiverSocketId = getReceiverSocketId(receiverId);
+		
 		if (receiverSocketId) {
 			// io.to(<socket_id>).emit() used to send events to specific client
 			io.to(receiverSocketId).emit("newMessage", newMessage);
@@ -101,8 +102,7 @@ export const getMessages = async (req, res) => {
 	}
 };
 
-/*
-* getMessages
+/* //! getMessages - //* output
 
 * const conversation = await Conversation.findOne({
   	participants: { $all: [senderId, userToChatId] },
@@ -132,3 +132,24 @@ export const getMessages = async (req, res) => {
     }
 ]
  */
+
+/* //! 	io.to(receiverSocketId).emit("newMessage", newMessage); //* EXPLAINATION
+
+* 1) Socket.IO Instance (io):
+ This is the instance of Socket.IO server. It manages all the sockets connected to it.
+
+* 2)  ****************** .to(receiverSocketId): ******************
+ This method targets a specific client (socket) by its unique socket ID (receiverSocketId). 
+ This ID is typically assigned to a client when they connect to the Socket.IO server.
+
+* 3) ****************** .emit("newMessage", newMessage): ******************
+ This method sends an "event" named "newMessage" to the targeted client. 
+ The second argument, "newMessage", is the "data (object)" being sent with the event. 
+ In this context, newMessage likely contains details about a message that was just sent in a chat application, 
+ such as the sender, the message content, and possibly timestamps.
+
+* Purpose
+The purpose of this code is to instantly inform a client (receiver) that a new message has been sent to them, 
+enabling real-time communication features in applications like chat services. 
+This avoids the need for the client to continuously check (poll) the server for new messages.
+*/
