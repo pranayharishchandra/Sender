@@ -34,24 +34,14 @@ export const SocketContextProvider = ({ children }) => {
 				setOnlineUsers(users);
 			});
 
-			// Cleanup function to close the socket when component unmounts or authUser changes
+			//* Cleanup function to close the socket when component unmounts or authUser changes
+			//* If authUser changes, the cleanup function will run first, closing the previous socket connection before creating a new one.
+			
+/** //? UNMOUNT MEANING
+(1) route change kro 
+(2) dependency me change ho useEffect ( callback, [authUser] )
+(3) tab ko band kr do  */
 			return () => localSocket.close();
-/**
-			const socket = io("http://localhost:5001", { //! change here
-				query: {
-					userId: authUser._id,
-				},
-			});
-
-			setSocket(socket);
-
-			// socket.on() is used to listen to the events. can be used both on client and server side
-			socket.on("getOnlineUsers", (users) => {
-				setOnlineUsers(users);
-			});
-
-			return () => socket.close();
-*/
 		} 
 		else {
 			if (socket) {

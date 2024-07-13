@@ -23,7 +23,7 @@ const io = new Server(server, {
 	},
 });
 
-/* //! cors: //* Explanation
+ /* //! cors: //* Explanation
 * cors: 
 This is an option within the Socket.IO server configuration that specifies how the server should handle CORS requests. CORS is a security feature that restricts web applications from making requests to a domain different from the one that served the initial web page.
 
@@ -97,3 +97,24 @@ io.on("connection", (socket) => {
 });
 
 export { app, io, server }; //* (1) Express app, (3) the Socket.IO server , and the (2) HTTP server
+
+
+
+/* //TODO: REDIS for data storage
+redis: https://youtu.be/jgpVdJB2sKQ?t=45
+(giant key: value pair) and it works on the ram (very fast) and not disk (like we are doing here)
+ */
+
+
+/* //*What Happens Without Cleanup
+If you don't close the socket connection in the cleanup function:
+
+
+* Resource Consumption:
+ The socket connection remains open, consuming resources on both the client and server.
+
+*  Multiple Connections:
+ Re-running the useEffect without closing previous connections can result in multiple open connections, leading to duplicated event handling and increased server load.
+
+*  Memory Leaks:
+ Unclosed connections can cause memory leaks, as the resources tied to these connections are not released. */

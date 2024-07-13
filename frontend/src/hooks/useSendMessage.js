@@ -24,7 +24,7 @@ const useSendMessage = () => {
 				body: JSON.stringify({ message }),
 			});
 
-			const data = await res.json();
+			const data = await res.json(); //* new Message({ senderId, receiverId, message });
 
 			if (data.error) throw new Error(data.error);
 

@@ -42,10 +42,19 @@ const useGetMessages = () => {
 			}
 		};
 
-		if (selectedConversation?._id) getMessages();
+		if (selectedConversation?._id) getMessages(); // only if some converstaion is selected then run this useEffect function
 
-	}, [selectedConversation?._id, setMessages]);
+	}, [selectedConversation?._id, setMessages]); 
 	// }, []); // wrong 
+
+	/* //? "setMessages" is a setter still we will write it in dependcy array - making code future proof
+* it's the best pratice to include the (variable-states) and  (functions) being used in the useEffect
+* because -
+	 * theoretically happen if the component re-renders and gets a new instance of the function), the useEffect hook should re-run to use the most recent version of setMessages
+	 
+! Immutable State Management:
+In state management libraries like Zustand, even though the setter functions like setMessages generally do not change, adhering to the practice of including all used dependencies ensures that any possible future changes in implementation do not introduce bugs.
+	 */
 
 	return { messages, loading };
 };
