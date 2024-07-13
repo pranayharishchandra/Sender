@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { useAuthContext } from "./AuthContext";
-import io from "socket.io-client";
+import io 								from "socket.io-client";
 
 const SocketContext = createContext();
 
@@ -10,85 +10,59 @@ export const useSocketContext = () => {
 
 export const SocketContextProvider = ({ children }) => {
 
-	const [socketInstance, setSocketInstance] = useState(null); // Renamed for clarity
+	const [socket, setSocket]           = useState(null);
 	const [onlineUsers, setOnlineUsers] = useState([]);
-	const { authUser } = useAuthContext();
+	const { authUser }                  = useAuthContext();
 
 	//* useEffect since we want to change the DOM automatically
 	useEffect(() => {
 
 		if (authUser) {
-			const newSocket = io("http://localhost:5001", { //! change here
+			// Create a new socket instance
+			const localSocket = io("http://localhost:5001", { // Renamed to localSocket
 				query: {
 					userId: authUser._id,
 				},
 			});
 
-			setSocketInstance(newSocket);
+			setSocket(localSocket); // Update state with the new socket instance
 
-			// socket.on() is used to listen to the events. can be used both on client and server side
-			newSocket.on("getOnlineUsers", (users) => {
+			//* Listen for the "getOnlineUsers" event, (on means listening to that event)
+			//! don't use "socket.on" because This will cause issues because the socket state might not be updated immediately.
+			localSocket.on("getOnlineUsers", (users) => { 
+				//* io.emit("getOnlineUsers", Object.keys(userSocketMap));
 				setOnlineUsers(users);
 			});
 
-			return () => newSocket.close();
+			// Cleanup function to close the socket when component unmounts or authUser changes
+			return () => localSocket.close();
+/**
+			const socket = io("http://localhost:5001", { //! change here
+				query: {
+					userId: authUser._id,
+				},
+			});
+
+			setSocket(socket);
+
+			// socket.on() is used to listen to the events. can be used both on client and server side
+			socket.on("getOnlineUsers", (users) => {
+				setOnlineUsers(users);
+			});
+
+			return () => socket.close();
+*/
 		} 
 		else {
-			if (socketInstance) {
-				socketInstance.close();
-				setSocketInstance(null);
+			if (socket) {
+				socket.close();
+				setSocket(null);
 			}
 		}
 	}, [authUser]);
 
-	return <SocketContext.Provider value={{ socket: socketInstance, onlineUsers }}>	 {children} 	</SocketContext.Provider>;
+	return <SocketContext.Provider value={{ socket, onlineUsers }}>	 {children} 	</SocketContext.Provider>;
 };
-
-// import { createContext, useState, useEffect, useContext } from "react";
-// import { useAuthContext } from "./AuthContext";
-// import io 								from "socket.io-client";
-
-// const SocketContext = createContext();
-
-// export const useSocketContext = () => {
-// 	return useContext(SocketContext);
-// };
-
-// export const SocketContextProvider = ({ children }) => {
-
-// 	const [socket, setSocket]           = useState(null);
-// 	const [onlineUsers, setOnlineUsers] = useState([]);
-// 	const { authUser }                  = useAuthContext();
-
-// 	//* useEffect since we want to change the DOM automatically
-// 	useEffect(() => {
-
-// 		if (authUser) {
-// 			const socket = io("http://localhost:5001", { //! change here
-// 				query: {
-// 					userId: authUser._id,
-// 				},
-// 			});
-
-// 			setSocket(socket);
-
-// 			// socket.on() is used to listen to the events. can be used both on client and server side
-// 			socket.on("getOnlineUsers", (users) => {
-// 				setOnlineUsers(users);
-// 			});
-
-// 			return () => socket.close();
-// 		} 
-// 		else {
-// 			if (socket) {
-// 				socket.close();
-// 				setSocket(null);
-// 			}
-// 		}
-// 	}, [authUser]);
-
-// 	return <SocketContext.Provider value={{ socket, onlineUsers }}>	 {children} 	</SocketContext.Provider>;
-// };
 
 /*
 * Code
