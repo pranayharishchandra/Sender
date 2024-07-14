@@ -25,15 +25,12 @@ MONGO_DB_URI=...
 JWT_SECRET=...
 NODE_ENV=...
 ```
+### Users
+```
+Username: pranay
+Password: 123456
 
-### Build the app
-
-```shell
-npm run build
+Username: anand
+Password: 123456
 ```
 
-### Start the app
-
-```shell
-npm start
-```
