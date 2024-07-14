@@ -1,3 +1,4 @@
+// TODO: when new user is added then it's adding it in the conversations in 30 seconds or have to do hard refresh, SOLUTION: when new user created, send that to frontend using "Socket.io" for real-time
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -7,35 +8,38 @@ const useGetConversations = () => {
 	const [conversations, setConversations] = useState([]);
 
 
-	//! *** useEffect should be used when data fetching should be done automatocaly to update the dom when ever the page loads
 
-	useEffect(() => {
+  const fetchConversations = async () => {
+    setLoading(true);
 
-		const getConversations = async () => {
+    try {
+      const res  = await fetch("/api/users");
+      const data = await res.json();
 
-			setLoading(true);
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
-			try {
-				
-				//! conversations = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
-				const res  = await fetch("/api/users"); //* list of all users with thier information other than their passwords
-				const data = await res.json();
+      setConversations(data);
+    } 
+		catch (error) {
+      toast.error(error.message);
+    } 
+		finally {
+      setLoading(false);
+    }
+  };
 
-				if (data.error) {
-					throw new Error(data.error);
-				}
-				setConversations(data);
-			}
-			catch (error) {
-				toast.error(error.message);
-			} 
-			finally {
-				setLoading(false);
-			}
-		};
+	// 
+  useEffect(() => {
+    fetchConversations();
 
-		getConversations();
-	}, []);
+    // Set up polling to fetch conversations every 30 seconds
+    const intervalId = setInterval(fetchConversations, 30000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
 	return { loading, conversations };
 };
