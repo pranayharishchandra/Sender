@@ -7,6 +7,9 @@
 								    and maintaining a list of online users.
 */
 
+//* In essence, "io" is for managing the "server" and "broadcasting" messages, 
+//* while "socket" is for managing "individual/perticular" connections and their specific events.
+
 import { Server } from "socket.io";
 import http    	  from "http";
 import express    from "express";
@@ -106,7 +109,18 @@ redis: https://youtu.be/jgpVdJB2sKQ?t=45
  */
 
 
+/* //* socket.off() vs socket.close()
+socket.off(): Removes specific event listeners. Use it for cleanup of event listeners.
+socket.close(): Closes the WebSocket connection. Use it to completely disconnect from the server.
+
+so i think socket.off would be used more
+and .close will be used very very rearly but atleat once like when user changes
+ChatGPT
+Yes, you are correct. Here’s a more detailed breakdown:
+*/
+
 /* //*What Happens Without Cleanup
+
 If you don't close the socket connection in the cleanup function:
 
 
@@ -118,3 +132,59 @@ If you don't close the socket connection in the cleanup function:
 
 *  Memory Leaks:
  Unclosed connections can cause memory leaks, as the resources tied to these connections are not released. */
+
+/*   //* io vs socket
+* io (Server-Side) - "SocketContext.jsx"
+io is an instance of the Socket.IO server, which is created on the server side. It is used to set up and manage the WebSocket server, handle incoming connections, and broadcast messages to all or specific connected clients.
+
+Key Points:
+Server-Side: It’s used on the server.
+Initialization: You initialize it once with the HTTP server.
+Broadcasting: It can be used to broadcast messages to all connected clients or to specific rooms.
+
+? Example Server
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
+
+	io.emit("getOnlineUsers", onlineUsers);
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected", socket.id);
+  });
+});
+
+
+* socket (Client-Side and Server-Side) - "socket.js"
+socket is an instance of the individual WebSocket connection between the client and the server. It is used to handle events and data transfer on a per-connection basis.
+
+Key Points:
+Client-Side and Server-Side: It’s used on both the client and server.
+Individual  Connection     : Represents a single connection between the client and server.
+Event       Handling       : It’s used to handle specific events and messages for this connection.
+
+? Client-Side Example:
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
+
+  socket.on("newMessage", (message) => {
+    console.log("new message from client:", message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected", socket.id);
+  });
+});
+
+
+ */
+
+
+
+

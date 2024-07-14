@@ -2,6 +2,7 @@ import useGetConversations from "../../hooks/useGetConversations";
 import { getRandomEmoji }  from "../../utils/emojis";
 import Conversation        from "./Conversation";
 
+// TODO: when new user is added then it's not automatically adding it in the conversations and have to do hard refresh, SOLUTION: when new user created, send that to frontend using "Socket.io" for real-time
 const Conversations = () => {
 
 	//! conversations = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");

@@ -18,16 +18,14 @@ const useListenMessages = () => {
 */
 		socket?.on("newMessage", (newMessage) => {
 
-			// newMessage.shouldShake = true; //*dded to control some aspect of the UI behavior when a new message is received.
+			newMessage.shouldShake = true; //* UI animation is "Message.jsx"
 			const sound            = new Audio(notificationSound);
 			sound.play();													  //* 1. play sound
 
-			// TODO: newMessage must only be added to reciver, bug now is it's being added to "selectedConversation" which is not necessarly the conversation who sent me the message
-			//! (BUG) it should only be added when the message is from the selected conversation
 			// message.controller.js: io.to(receiverSocketId).emit("newMessage", { ...newMessage, conversationId: conversation._id});
-
-			if (newMessage.conversationId === selectedConversation?._id)
-			setMessages([...messages, newMessage]); //* 2. add the frontend "selectedConversation" 
+			if (newMessage.conversationId === selectedConversation?._id){
+				setMessages([...messages, newMessage]);
+			}
 
 		});
 

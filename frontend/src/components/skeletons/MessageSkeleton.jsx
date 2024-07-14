@@ -1,3 +1,5 @@
+//* SHIMMER FOR LOADING MESSAGES 
+
 const MessageSkeleton = () => {
 	return (
 		<>

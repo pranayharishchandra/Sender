@@ -21,7 +21,7 @@ const Login = () => {
 				
 				<h1 className='text-3xl font-semibold text-center text-gray-300'>
 					Login
-					<span className='text-blue-500'> Sender</span>
+					<span className='text-purple-500'> Sender</span>
 				</h1>
 
 				<form onSubmit={handleSubmit}>

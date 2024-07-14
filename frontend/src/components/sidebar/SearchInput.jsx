@@ -1,15 +1,18 @@
 //! home -> sidebar -> searchInput
 
-import { useState } from "react";
-import { IoSearchSharp } from "react-icons/io5";
-import useConversation from "../../zustand/useConversation";
+import { useState }        from "react";
+import { IoSearchSharp }   from "react-icons/io5";
+import useConversation     from "../../zustand/useConversation";
 import useGetConversations from "../../hooks/useGetConversations";
-import toast from "react-hot-toast";
+import toast					     from "react-hot-toast";
 
 const SearchInput = () => {
-	const [search, setSearch] = useState("");
+	const [search, setSearch]         = useState("");
 	const { setSelectedConversation } = useConversation();
-	const { conversations } = useGetConversations();
+	const { conversations }           = useGetConversations();
+
+	// TODO: filter the "conversations" when (search !== ""), by creating an extra variable "all_conversations" along with conversations, when change "search" filter "conversations" and when (search === "") then do (converstions = all_conversations) 
+
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -18,15 +21,18 @@ const SearchInput = () => {
 			return toast.error("Search term must be at least 3 characters long");
 		}
 
+		//* user's "name" and "search" text both should be [ lowercase ]
 		const conversation = conversations.find((c) => c.fullName.toLowerCase().includes(search.toLowerCase()));
 
 		if (conversation) {
 			setSelectedConversation(conversation);
 			setSearch("");
-		} else toast.error("No such user found!");
+		} 
+		else toast.error("No such user found!");
 	};
 	return (
 		<form onSubmit={handleSubmit} className='flex items-center gap-2'>
+			
 			<input
 				type='text'
 				placeholder='Search…'
@@ -34,9 +40,11 @@ const SearchInput = () => {
 				value={search}
 				onChange={(e) => setSearch(e.target.value)}
 			/>
-			<button type='submit' className='btn btn-circle bg-sky-500 text-white'>
+
+			<button type='submit' className='btn btn-circle bg-purple-500 hover:bg-black text-white'>
 				<IoSearchSharp className='w-6 h-6 outline-none' />
 			</button>
+
 		</form>
 	);
 };
