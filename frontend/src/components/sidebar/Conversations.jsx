@@ -8,6 +8,8 @@ const Conversations = () => {
 	//! conversations = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
 	const { loading, conversations } = useGetConversations(); //* all the conversations (users other than current user)
 
+	console.log(conversations) //! it's not working, this should component should re-render as "conversations" changes by "SearchInput.jsx", in "SearchInput.jsx" and "useGetConversations" is re-rendering as "search" variable changed
+
 	return (
 		<div className='py-2 flex flex-col overflow-auto md:min-w-[15vw]'>
 
