@@ -27,10 +27,10 @@ NODE_ENV=...
 ```
 ### Users
 ```
-Username: pranay
+Username: sujit
 Password: 123456
 
-Username: anand
+Username: sudhir
 Password: 123456
 ```
 
