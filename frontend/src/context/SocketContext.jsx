@@ -19,7 +19,8 @@ export const SocketContextProvider = ({ children }) => {
 
 		if (authUser) {
 			// Create a new socket instance
-			const localSocket = io("http://localhost:5001", { // Renamed to localSocket
+			// const localSocket = io("http://localhost:5001", { // Renamed to localSocket
+			const localSocket = io("https://sender-oiym.onrender.com/", { // Renamed to localSocket
 				query: {
 					userId: authUser._id,
 				},

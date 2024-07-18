@@ -21,7 +21,8 @@ const server = http.createServer(app); //* 2. creating http server using express
 //* 3. A Socket.IO server is instantiated with the HTTP server and configured for CORS (Cross-Origin Resource Sharing).
 const io = new Server(server, {
 	cors: {
-		origin: ["http://localhost:3000"], 
+		// origin: ["http://localhost:3000"], 
+		origin: ["https://sender-oiym.onrender.com/"], 
 		methods: ["GET", "POST"],
 	},
 });
