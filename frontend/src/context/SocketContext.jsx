@@ -4,10 +4,9 @@ import io 								from "socket.io-client";
 
 const SocketContext = createContext();
 
-//! shifted to other file - it was giving me warning in vscode - "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
-// export const useSocketContext = () => {
-// 	return useContext(SocketContext);
-// };
+export const useSocketContext = () => {
+	return useContext(SocketContext);
+};
 
 export const SocketContextProvider = ({ children }) => {
 
