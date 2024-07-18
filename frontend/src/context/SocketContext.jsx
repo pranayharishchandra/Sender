@@ -1,12 +1,13 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect } from "react";
 import { useAuthContext } from "./AuthContext";
 import io 								from "socket.io-client";
 
 const SocketContext = createContext();
 
-export const useSocketContext = () => {
-	return useContext(SocketContext);
-};
+//! shifted to other file - it was giving me warning in vscode - "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components."
+// export const useSocketContext = () => {
+// 	return useContext(SocketContext);
+// };
 
 export const SocketContextProvider = ({ children }) => {
 
@@ -50,7 +51,7 @@ export const SocketContextProvider = ({ children }) => {
 				setSocket(null);
 			}
 		}
-	}, [authUser]);
+	}, [authUser, socket]);
 
 	return <SocketContext.Provider value={{ socket, onlineUsers }}>	 {children} 	</SocketContext.Provider>;
 };

@@ -14,7 +14,8 @@ const Messages = () => {
 
 		setTimeout(() => {
 			lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-		}, 100);
+		// }, 100);
+		}, 0);
 		
 	}, [messages]);
 
